@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 using Code.Pizza.Core.Domain;
@@ -27,7 +29,7 @@ namespace Code.Pizza.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(LoginModel model)
+        public ActionResult Login(LoginModel model, string returnUrl)
         {
             if(!this.ModelState.IsValid)
             {
@@ -43,14 +45,29 @@ namespace Code.Pizza.Web.Controllers
                 return View(model);
             }
 
+            long cookieExpires = 15;
+            Configuration webConfiguration = WebConfigurationManager.OpenWebConfiguration("");
+            ConfigurationSectionGroup configurationSectionGroup = webConfiguration.SectionGroups.Get("system.web");
+
+            if(configurationSectionGroup != null)
+            {
+                AuthenticationSection authenticationSection = (AuthenticationSection)configurationSectionGroup.Sections.Get("authentication");
+                cookieExpires = Convert.ToInt64(authenticationSection.Forms.Timeout.TotalMinutes);
+            }
+
             FormsAuthenticationTicket authTicket =
-                new FormsAuthenticationTicket(1, user.Email, DateTime.Now, DateTime.Now.AddMinutes(20), false, string.Empty);
+                new FormsAuthenticationTicket(1, user.Email, DateTime.Now, DateTime.Now.AddMinutes(cookieExpires), false, string.Empty);
 
             string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
             HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) { Expires = authTicket.Expiration };
             this.Response.Cookies.Add(faCookie);
 
-            return this.RedirectToAction("Index", "Home");
+            if (string.IsNullOrWhiteSpace(returnUrl))
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            return this.Redirect(returnUrl);
         }
 
         public ActionResult Logout()
