@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Configuration;
 using System.Web;
 using System.Web.Configuration;
@@ -25,16 +26,43 @@ namespace Code.Pizza.Web.Controllers
         {
             LoginModel model = new LoginModel();
 
+			if (Request.Cookies["username"] == null || Request.Cookies["username"].Value.ToString(CultureInfo.InvariantCulture).Trim() == "")
+			{
+				model.RememberMe = false;
+			}
+			else
+			{
+				model.UserName = Request.Cookies["username"].Value.ToString(CultureInfo.InvariantCulture).Trim();
+				model.RememberMe = true;
+			}
+
             return this.View(model);
         }
 
         [HttpPost]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if(!this.ModelState.IsValid)
+			if(!this.ModelState.IsValid)
             {
                 return View(model);
             }
+
+			if (model.RememberMe)
+			{
+				int rememberMeCookieLiftime = Convert.ToInt32(WebConfigurationManager.AppSettings["RememberMeCookieLifetime"]);
+				HttpCookie cookie = new HttpCookie("username") { Value = model.UserName.Trim(), Expires = DateTime.Now.AddDays(rememberMeCookieLiftime) };
+
+				this.Response.Cookies.Add(cookie);
+			}
+			else
+			{
+				var httpCookie = this.Response.Cookies["username"];
+				if(httpCookie != null)
+				{
+					httpCookie.Expires = DateTime.Now;
+				}
+				this.Response.Cookies.Remove("username");
+			}
 
             User user = this.userService.Logon(model.UserName, model.Password);
 
@@ -72,7 +100,19 @@ namespace Code.Pizza.Web.Controllers
 
         public ActionResult Logout()
         {
-            throw new NotImplementedException();
+			// Get the authentication cookie and expire it
+			string cookieName = FormsAuthentication.FormsCookieName;
+			HttpCookie authCookie = Request.Cookies[cookieName];
+
+			DateTime expired = DateTime.Now.AddDays(-1);
+
+			if (authCookie != null)
+			{
+				authCookie.Expires = expired;
+				Response.Cookies.Add(authCookie);
+			}
+
+			return View("Logout");
         }
     }
 }
