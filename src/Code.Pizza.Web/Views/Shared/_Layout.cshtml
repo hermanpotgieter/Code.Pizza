@@ -3,20 +3,37 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-</head>
-    <body>
-        @if(User.Identity.IsAuthenticated)
-        {
-            <div id="logout">
-                @Html.ActionLink("Logout", "Logout", "Account")
-            </div>
-        }
-        @RenderBody()
 
-        @Scripts.Render("~/bundles/jquery")
-        @RenderSection("scripts", required: false)
-    </body>
+    <title>@ViewBag.Title</title>
+
+    @Styles.Render("~/Content/css")
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div id="logout">
+            @Html.ActionLink("Logout", "Logout", "Account")
+        </div>
+    }
+
+    @RenderBody()
+
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        
+        $(function () {
+            $(document).ajaxError(function (e, xhr) {
+                if (xhr.status == 403) {
+                    window.location = '@(Url.Action("Login", "Account"))';
+                }
+            });
+        });
+        
+    </script>
+
+</body>
 </html>

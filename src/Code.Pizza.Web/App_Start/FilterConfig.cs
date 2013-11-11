@@ -1,5 +1,5 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Code.Pizza.Web.Filters;
 
 namespace Code.Pizza.Web
 {
@@ -7,7 +7,7 @@ namespace Code.Pizza.Web
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new AuthorizeAttribute());
+            filters.Add(new AjaxAuthorizeAttribute());
             filters.Add(new HandleErrorAttribute());
         }
     }

@@ -1,0 +1,110 @@
+@oneUnit: 6px;
+@twoUnits: @oneUnit * 2;
+@threeUnits: @oneUnit * 3;
+@fourUnits: @oneUnit * 4;
+
+body {
+    margin-right: auto;
+    margin-left: auto;
+    width: 960px;
+    background-color: #fff;
+    color: #232323;
+    text-align: center;
+    font-size: .85em;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+}
+
+header, footer, nav, section {
+    display: block;
+}
+
+h1 {
+    font-size: 36px;
+}
+
+/* Styles for basic forms
+-----------------------------------------------------------*/
+fieldset {
+    border: 1px solid #ddd;
+    padding: 0 1.4em 1.4em 1.4em;
+    margin: 0 0 1.5em 0;
+}
+
+legend {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+textarea {
+    min-height: 75px;
+}
+
+.editor-label {
+    margin: 1em 0 0 0;
+}
+
+.editor-field {
+    margin: 0.5em 0 0 0;
+}
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+    color: #f00;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 1px solid #f00;
+    background-color: #fee;
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    color: #f00;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/*-----------------------------------------------------------*/
+header {
+    background-image: url('images/Chalkboard Sum.jpg');
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+    border: 1px solid orange;
+    color: white;
+    height: 200px;
+
+    a {
+        color: white;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+#login-link-container {
+    float: right;
+    margin-top: @twoUnits;
+    margin-right: @fourUnits;
+}
+
+#content {
+    background-image: url('images/Chalkboard Background Dark.jpg');
+    background-repeat: repeat-y;
+    border: 1px solid silver;
+    height: 800px;
+}
+
+.test {
+    list-style-type: none;
+    color: #ffffff;
+    font-family: 'Schoolbell', cursive;
+    font-size: 3em;
+}

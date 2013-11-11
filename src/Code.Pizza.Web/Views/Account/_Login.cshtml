@@ -1,0 +1,31 @@
+﻿@model Code.Pizza.Web.Models.LoginModel
+
+@using (Html.BeginForm("Login", "Account", new { returnUrl = Request.QueryString["ReturnUrl"] }))
+{
+
+    if (ViewData.ModelState.ContainsKey("InvalidLogin"))
+    {
+                 
+    @Html.ValidationSummary()
+
+    }
+            
+    @Html.LabelFor(m => m.UserName)
+    @Html.TextBoxFor(m => m.UserName)
+    @Html.ValidationMessageFor(m => m.UserName)
+
+    <br />
+
+    @Html.LabelFor(m => m.Password)
+    @Html.PasswordFor(m => m.Password)
+    @Html.ValidationMessageFor(m => m.Password)
+
+    <br />
+            
+    @Html.LabelFor(m => m.RememberMe)
+    @Html.CheckBoxFor(m => m.RememberMe)
+            
+    <br />
+            
+    <input type="submit" value="Login" />           
+}
